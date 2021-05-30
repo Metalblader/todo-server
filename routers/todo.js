@@ -3,9 +3,18 @@ const router = express.Router();
 const client = require("../db-connection");
 
 router.post("/", function (req, res) {
-  // console.log(req.body.deskripsi);
-  client.query("INSERT INTO todos(todo) VALUES ($1)", [req.body.todo]);
-  res.end();
+  client.query(
+    "INSERT INTO todos(todo) VALUES ($1) RETURNING id",
+    [req.body.todo],
+    (err, result) => {
+      if (err) {
+        res.end(500);
+        return;
+      }
+
+      res.json({ id: result.rows[0].id, todo: req.body.todo });
+    }
+  );
 });
 
 router.get("/", function (req, res) {

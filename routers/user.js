@@ -14,18 +14,24 @@ router.post(
       if (result.rows[0].jumlah_user > 0) {
         auth(req, res, next);
       } else {
-        console.log("NEXT");
+        // console.log("NEXT");
         next();
       }
     });
   },
   (req, res) => {
-    client.query("INSERT INTO users(username, password) VALUES ($1, $2)", [
-      req.body.username,
-      req.body.password,
-    ]);
-    // res.send({id: req.})
-    res.end();
+    client.query(
+      "INSERT INTO users(username, password) VALUES ($1, $2) RETURNING id",
+      [req.body.username, req.body.password],
+      (err, result) => {
+        if (err) {
+          res.end(500);
+          return;
+        }
+
+        res.json({ id: result.rows[0].id, username: req.body.username });
+      }
+    );
   }
 );
 
