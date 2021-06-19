@@ -14,7 +14,7 @@ module.exports = function (req, res, next) {
       if (data.length > 0) {
         next();
       } else {
-        res.send(401);
+        res.sendStatus(401);
       }
     });
 };

@@ -14,7 +14,17 @@ router.post(
       if (result.rows[0].jumlah_user > 0) {
         auth(req, res, next);
       } else {
-        // console.log("NEXT");
+        next();
+      }
+    });
+  },
+  (req, res, next) => {
+    client.query("SELECT * from users").then((result) => {
+      const data = result.rows;
+
+      if (data.find((item) => item.username === req.body.username)) {
+        res.status(400).send({ error: "INSERT ERROR (username already used)" });
+      } else {
         next();
       }
     });
@@ -51,7 +61,9 @@ router.delete(
         console.log("TESTING", result.rows[0].jumlah_user);
         next();
       } else {
-        res.send("DELETE ERROR");
+        res
+          .status(400)
+          .send({ error: "DELETE ERROR (only one user remaining)" });
       }
     });
   },
