@@ -58,7 +58,6 @@ router.delete(
   (req, res, next) => {
     client.query("SELECT COUNT(*) as jumlah_user FROM users").then((result) => {
       if (result.rows[0].jumlah_user > 1) {
-        console.log("TESTING", result.rows[0].jumlah_user);
         next();
       } else {
         res

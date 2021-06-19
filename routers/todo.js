@@ -13,6 +13,12 @@ router.post("/", function (req, res) {
       }
 
       res.json({ id: result.rows[0].id, todo: req.body.todo });
+
+      // NOTE: bisa juga menggunakan alternatif ini, sama untuk route delete
+      // client.query("SELECT * from todos").then((result) => {
+      //   const data = result.rows;
+      //   req.io.sockets.emit("add_todo", { data: data });
+      // });
     }
   );
 });
@@ -22,9 +28,6 @@ router.get("/", function (req, res) {
     // const todos = result.rows.map((todo) => `<div>${todo.todo}</div>`);
     // const data = todos.join("");
     const data = result.rows;
-    // todos.forEach((todo) => {
-    //   res.send(todo);
-    // });
     res.json(data);
   });
 });
